@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using InMemoryDatabaseAspNetCore.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -29,6 +28,12 @@ namespace InMemoryDatabaseAspNetCore
         {
             // Add framework services.
             services.AddMvc();
+            services.AddEntityFrameworkSqlServer()
+                    .AddDbContext<InMemoryContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+               .AddEntityFrameworkStores<InMemoryContext>()
+               .AddDefaultTokenProviders();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
